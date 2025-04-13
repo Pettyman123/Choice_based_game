@@ -1,0 +1,33 @@
+{
+    "scene1": {
+      "folder": "assets/scene1",
+      "text": "You wake up in a dark room. A faint light flickers...",
+      "choices": {
+        "A_text": "Follow the light",
+        "B_text": "Stay still",
+        "A": "scene2",
+        "B": "scene3"
+      }
+    },
+    "scene2": {
+      "folder": "assets/scene2",
+      "text": "The hallway narrows as the light grows...",
+      "choices": {
+        "A_text": "Move quickly",
+        "B_text": "Call out",
+        "A": "scene3",
+        "B": "scene3"
+      }
+    },
+    "scene3": {
+      "folder": "assets/scene3",
+      "text": "You hear whispers surrounding you...",
+      "choices": {
+        "A_text": "Run",
+        "B_text": "Listen",
+        "A": "scene1",
+        "B": "scene1"
+      }
+    }
+  }
+  
