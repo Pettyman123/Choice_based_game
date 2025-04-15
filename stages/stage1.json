@@ -1,0 +1,98 @@
+{
+  "scene1": {
+    "folder": "assets/scene1",
+    "text": "What's happening here...? The abandoned space station drifts silently ahead, its viewport windows like dark, hollow eyes staring back at me. The distress signal from this place... I shouldn't have come alone.",
+    "choices": {
+      "A": "scene2",
+      "B": "scene3",
+      "A_text": "Dock with the station",
+      "B_text": "Maintain distance"
+    },
+    "emotion": "scared",
+    "pose": "chibi_thinking"
+  },
+  "scene2": {
+    "folder": "assets/scene2",
+    "text": "I should investigate further. This station gives me the creeps, but I've come too far to turn back now. The airlock hisses and shudders as I cycle through.",
+    "choices": {
+      "A": "scene4",
+      "B": "scene5",
+      "A_text": "Check the airlock mechanism",
+      "B_text": "Enter the main hub"
+    },
+    "emotion": "talking",
+    "pose": "chibi_standing"
+  },
+  "scene3": {
+    "folder": "assets/scene3",
+    "text": "I better maintain distance for now. Who knows what contamination might be lurking here. From my ship's scanner, I notice strange energy fluctuations in the station's research module.",
+    "choices": {
+      "A": "scene6",
+      "B": "scene7",
+      "A_text": "Scan longer",
+      "B_text": "Find a secondary docking port"
+    },
+    "emotion": "wondering",
+    "pose": "chibi_thinking"
+  },
+  "scene4": {
+    "folder": "assets/scene4",
+    "text": "Inside the airlock mechanism is a strange crystalline growth etched with symbols. It seems to be pulsing with an unnatural light, throbbing with alien rhythm. My fingers tingle as they near the formation.",
+    "choices": {
+      "A": "scene8",
+      "B": "scene9",
+      "A_text": "Touch the crystal",
+      "B_text": "Move away quickly"
+    },
+    "emotion": "questioning",
+    "pose": "chibi_standing"
+  },
+  "scene5": {
+    "folder": "assets/scene5",
+    "text": "The main hub is vast but abandoned. A holographic display flickers erratically overhead. Zero-G debris floats everywhere except... a clear path where something has moved recently toward the laboratory section.",
+    "choices": {
+      "A": "scene10",
+      "B": "scene11",
+      "A_text": "Follow the cleared path",
+      "B_text": "Check the command center"
+    },
+    "emotion": "excited",
+    "pose": "chibi_standing"
+  },
+  "scene6": {
+    "folder": "assets/scene6",
+    "text": "Patience pays off. I detect movement in the research module. Something's manipulating the equipment... humanoid but wrong somehow. The figure suddenly turns toward my scanner beam.",
+    "choices": {
+      "A": "scene12",
+      "B": "scene13",
+      "A_text": "Power down systems",
+      "B_text": "Increase scanner resolution"
+    },
+    "emotion": "watching",
+    "pose": "chibi_scared"
+  },
+  "scene7": {
+    "folder": "assets/scene7",
+    "text": "Around the station's rim, I find a maintenance airlock. It's locked, but the security protocols have been corrupted. I could probably override without triggering any alerts.",
+    "choices": {
+      "A": "scene14",
+      "B": "scene15",
+      "A_text": "Override the airlock",
+      "B_text": "Look for authentication codes first"
+    },
+    "emotion": "smirk",
+    "pose": "chibi_thinking"
+  },
+  "scene8": {
+    "folder": "assets/scene8",
+    "text": "As my fingers touch the crystal, a shock runs through my suit systems. Suddenly, visions flood my mind—glimpses of experiments performed on this station, of terrible entities summoned from the void between stars.",
+    "choices": {
+      "A": "stage2_scene1",
+      "B": "stage2_scene2",
+      "A_text": "Pull away from the crystal",
+      "B_text": "Try to understand the visions"
+    },
+    "emotion": "scared",
+    "pose": "chibi_scared"
+  }
+}

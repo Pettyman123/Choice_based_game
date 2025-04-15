@@ -1,0 +1,98 @@
+{
+    "stage2_scene1": {
+      "folder": "assets/stage2_scene1",
+      "text": "I jerk my hand away, but the visions linger. This station has witnessed terrible things. I need to find out what happened here... and if anyone is still alive in this cosmic nightmare.",
+      "choices": {
+        "A": "stage2_scene3",
+        "B": "stage2_scene4",
+        "A_text": "Search for mission logs",
+        "B_text": "Look for anomalous readings"
+      },
+      "emotion": "questioning",
+      "pose": "chibi_thinking"
+    },
+    "stage2_scene2": {
+      "folder": "assets/stage2_scene2",
+      "text": "I focus on the visions, trying to make sense of them. They show scientists in quarantine suits, an interdimensional gateway, and a sealed chamber deep within the station. Something was captured here...",
+      "choices": {
+        "A": "stage2_scene5",
+        "B": "stage2_scene6",
+        "A_text": "Find the containment chamber",
+        "B_text": "Look for research data"
+      },
+      "emotion": "watching",
+      "pose": "chibi_thinking"
+    },
+    "stage2_scene3": {
+      "folder": "assets/stage2_scene3",
+      "text": "In the data center, I find fragmented logs and research entries. The Nova Horizon Corporation abandoned this station after an 'incident' three months ago. There are mentions of dimensional breach experiments.",
+      "choices": {
+        "A": "stage2_scene7",
+        "B": "stage2_scene8",
+        "A_text": "Research the experiments",
+        "B_text": "Look for crew biometrics"
+      },
+      "emotion": "reading",
+      "pose": "chibi_reading"
+    },
+    "stage2_scene4": {
+      "folder": "assets/stage2_scene4",
+      "text": "Strange radiation pockets permeate the station. In one corridor, I find a viewport that shows space warping differently than it should. Something is bending reality here.",
+      "choices": {
+        "A": "stage2_scene9",
+        "B": "stage2_scene10",
+        "A_text": "Take measurements",
+        "B_text": "Listen for anomalous sounds"
+      },
+      "emotion": "scared",
+      "pose": "chibi_scared"
+    },
+    "stage2_scene5": {
+      "folder": "assets/stage2_scene5",
+      "text": "The containment chamber is hidden behind a false wall. As I traverse the emergency corridor, I hear faint whispers through my comm system. The air feels charged, ionized.",
+      "choices": {
+        "A": "stage2_scene11",
+        "B": "stage2_scene12",
+        "A_text": "Follow the whispers",
+        "B_text": "Investigate side laboratories"
+      },
+      "emotion": "scared",
+      "pose": "chibi_standing"
+    },
+    "stage2_scene6": {
+      "folder": "assets/stage2_scene6",
+      "text": "In the main lab, I find research artifacts: quantum field generators arranged in patterns, strange equations written across screens, and data tablets containing formulas that hurt my eyes to read.",
+      "choices": {
+        "A": "stage2_scene13",
+        "B": "stage2_scene14",
+        "A_text": "Download the research data",
+        "B_text": "Examine the equipment"
+      },
+      "emotion": "questioning",
+      "pose": "chibi_reading"
+    },
+    "stage2_scene7": {
+      "folder": "assets/stage2_scene7",
+      "text": "The experiments were attempts to create stable wormholes between dimensions. The team discovered something intelligent in the void, but whatever they found followed them back. They couldn't close the portal.",
+      "choices": {
+        "A": "stage2_scene15",
+        "B": "stage2_scene16",
+        "A_text": "Find the portal",
+        "B_text": "Look for survivors"
+      },
+      "emotion": "wondering",
+      "pose": "chibi_thinking"
+    },
+    "stage2_scene8": {
+      "folder": "assets/stage2_scene8",
+      "text": "Crew biosignature records show strange mutations over time. Dr. Chen, the lead scientist's daughter, shows particularly unusual changes. Her final scan shows two distinct patterns overlapping—human and something else.",
+      "choices": {
+        "A": "stage3_scene1",
+        "B": "stage3_scene2",
+        "A_text": "Look for Dr. Chen's quarters",
+        "B_text": "Search for quarantine protocols"
+      },
+      "emotion": "watching",
+      "pose": "chibi_scared"
+    }
+  }

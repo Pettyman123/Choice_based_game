@@ -5,7 +5,6 @@ import sys
 import math
 
 
-import json
 
 def load_stage(stage_name):
     path = f"stages/{stage_name}.json"
@@ -15,7 +14,6 @@ def load_stage(stage_name):
     except FileNotFoundError:
         print(f"❌ Stage file not found: {path}")
         return {}
-
 
 
 def play_background_music():
@@ -60,37 +58,8 @@ def load_game():
         return None
 
 
-
-# def draw_wavy_text(surface, text, x, y, font, color, time_offset=0, amplitude=5, frequency=0.3):
-#     for i, char in enumerate(text):
-#         offset_y = math.sin(time_offset + i * frequency) * amplitude
-#         char_surf = font.render(char, True, color)
-#         surface.blit(char_surf, (x + i * char_surf.get_width(), y + offset_y))
-
-
-# def draw_glow_text(surface, text, x, y, font, main_color, glow_color, intensity=5):
-#     for dx in range(-intensity, intensity + 1):
-#         for dy in range(-intensity, intensity + 1):
-#             if dx**2 + dy**2 <= intensity**2:
-#                 glow_surface = font.render(text, True, glow_color)
-#                 surface.blit(glow_surface, (x + dx, y + dy))
-#     text_surface = font.render(text, True, main_color)
-#     surface.blit(text_surface, (x, y))
-
-# def draw_glowy_wavy_text(surface, text, x, y, font, main_color, glow_color, time_offset=0):
-#     for i, char in enumerate(text):
-#         offset_y = math.sin(time_offset + i * 0.3) * 5
-
-#         # glow
-#         for dx in range(-2, 3):
-#             for dy in range(-2, 3):
-#                 if dx != 0 or dy != 0:
-#                     glow_surf = font.render(char, True, glow_color)
-#                     surface.blit(glow_surf, (x + i * 22 + dx, y + offset_y + dy))
-
-#         # main text
-#         char_surf = font.render(char, True, main_color)
-#         surface.blit(char_surf, (x + i * 22, y + offset_y))
+# Cache for loaded character images
+character_cache = {}
 
 
 # Initialize Pygame
@@ -120,12 +89,6 @@ font = pygame.font.Font(FONT_PATH, FONT_SIZE)
 # Setup Window
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Eerie Choice Game")
-
-# Font Setup
-# font = pygame.font.SysFont("Arial", 32)
-# Load story.json
-# with open('data/story.json', 'r') as f:
-#     STORY = json.load(f)
 
 current_stage = "stage1"  # default starting point
 STORY = load_stage(current_stage)
@@ -205,6 +168,60 @@ def apply_filter(surface, blur_strength=5, color=(50, 50, 50), alpha=80):
     return surface
 
 
+# Character overlay constants
+CHARACTER_WIDTH = 300  # Standard width for character images
+CHARACTER_HEIGHT = 350  # Standard height for character images
+FACE_WIDTH = 200  # Standard width for face images
+FACE_HEIGHT = 200  # Standard height for face images
+FACE_POSITION = (980, 50)  # Top right, with some padding
+CHARACTER_POSITION = (800, 320)  # Bottom right, with some padding
+
+# Character cache dictionary
+character_cache = {}
+
+def load_character_image(type_path, name, width=None, height=None):
+    """Load character images with caching and resize to standard dimensions"""
+    cache_key = f"{type_path}/{name}/{width}/{height}"
+    if cache_key in character_cache:
+        return character_cache[cache_key]
+    
+    path = f"assets/{type_path}/{name}.png"  # This should match your file path format
+    if os.path.exists(path):
+        image = pygame.image.load(path).convert_alpha()
+        
+        # Resize if dimensions provided
+        if width and height:
+            image = pygame.transform.smoothscale(image, (width, height))
+        
+        character_cache[cache_key] = image
+        return image
+    else:
+        print(f"❌ Character image not found: {path}")
+        return None
+
+def display_character(surface, scene_data):
+    """Display character overlays with standardized dimensions"""
+    if 'emotion' in scene_data and 'pose' in scene_data:
+        # Get the emotion and pose values
+        emotion = scene_data['emotion']
+        pose = scene_data['pose']
+        
+        # Load face with standardized size
+        face_img = load_character_image('faces', f"face_{emotion}", 
+                                      FACE_WIDTH, FACE_HEIGHT)
+        
+        # Load chibi with standardized size
+        chibi_img = load_character_image('chibi', pose, 
+                                       CHARACTER_WIDTH, CHARACTER_HEIGHT)
+        
+        # Position and display face
+        if face_img:
+            surface.blit(face_img, FACE_POSITION)
+        
+        # Position and display chibi
+        if chibi_img:
+            surface.blit(chibi_img, CHARACTER_POSITION)
+
 # Initialize first scene images
 scene_images = load_scene_images(current_scene)
 full_text = STORY[current_scene]['text']
@@ -263,15 +280,14 @@ while running:
                     play_voice(current_scene)
                     last_slide_time = pygame.time.get_ticks()
                     # Store player's choice
-                    player_memory[current_scene] = "A"  # or "B"
-
+                    player_memory[current_scene] = "B"  # Fixed - was "A"
+                    
                     # 🔁 Reset typing text
                     full_text = STORY[current_scene]['text']
                     visible_text = ""
                     char_index = 0
                     last_char_time = pygame.time.get_ticks()
                     typing_sound.play()
-
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
@@ -314,9 +330,6 @@ while running:
                     char_index = 0
                     last_char_time = pygame.time.get_ticks()
 
-
-
-
     # Show current scene image
     if show_new_image:
         fade_in(screen, scene_images[image_index])
@@ -325,9 +338,11 @@ while running:
         screen.blit(pygame.transform.scale(scene_images[image_index], (SCREEN_WIDTH, SCREEN_HEIGHT)), (0, 0))
         apply_filter(screen, color=(20, 20, 20), alpha=100)  # dark fog
 
+    # Display character overlay with standardized sizing
+    if current_scene in STORY:
+        display_character(screen, STORY[current_scene])
 
     # Show text
-    
     dialogue = STORY[current_scene]['text']
     now = pygame.time.get_ticks()
     if char_index < len(full_text) and now - last_char_time > text_speed:
@@ -342,9 +357,12 @@ while running:
         char_index += 1
         last_char_time = now
 
+    # Draw text box background for better readability
+    text_box = pygame.Rect(40, 40, SCREEN_WIDTH - 80, 200)
+    pygame.draw.rect(screen, (0, 0, 0, 150), text_box, border_radius=10)
+    pygame.draw.rect(screen, (100, 100, 100), text_box, 2, border_radius=10)  # Border
 
     draw_text(screen, visible_text, 50, 50, SCREEN_WIDTH - 100, font)
-
 
     # Show choices ONLY on last image
     if image_index == len(scene_images) - 1:

@@ -1,0 +1,122 @@
+{
+    "stage3_scene1": {
+      "folder": "assets/stage3_scene1",
+      "text": "Dr. Chen's quarters are preserved like a laboratory. Hologram projectors display cosmic anomalies. A data terminal activates itself when I enter. A message appears: 'I'm still here in the void.'",
+      "choices": {
+        "A": "stage3_scene3",
+        "B": "stage3_scene4",
+        "A_text": "Respond to the message",
+        "B_text": "Search for hidden compartments"
+      },
+      "emotion": "scared",
+      "pose": "chibi_standing"
+    },
+    "stage3_scene2": {
+      "folder": "assets/stage3_scene2",
+      "text": "In a sealed section, I find modern equipment—quantum scanners, gravitational sensors, void probes. A recovery team was here recently. Their final log entry: 'The entity is evolving. Evacuation imperative.'",
+      "choices": {
+        "A": "stage3_scene5",
+        "B": "stage3_scene6",
+        "A_text": "Follow their evacuation route",
+        "B_text": "Use their equipment"
+      },
+      "emotion": "questioning",
+      "pose": "chibi_thinking"
+    },
+    "stage3_scene3": {
+      "folder": "assets/stage3_scene3",
+      "text": "'Hello? I know you're here.' The air shimmers instantly. A distorted voice responds: 'They trapped me. They used me as a dimensional anchor. Help me close the gateway.'",
+      "choices": {
+        "A": "stage3_scene7",
+        "B": "stage3_scene8",
+        "A_text": "Promise to help",
+        "B_text": "Ask how to close the gateway"
+      },
+      "emotion": "talking",
+      "pose": "chibi_talking"
+    },
+    "stage3_scene4": {
+      "folder": "assets/stage3_scene4",
+      "text": "Behind the laboratory panels, I find a hidden passage. It leads to a circular chamber deep in the station. In the center floats an artificial singularity—a tear in spacetime with darkness swirling within.",
+      "choices": {
+        "A": "stage3_scene9",
+        "B": "stage3_scene10",
+        "A_text": "Examine the singularity",
+        "B_text": "Look for controls to seal it"
+      },
+      "emotion": "watching",
+      "pose": "chibi_standing"
+    },
+    "stage3_scene5": {
+      "folder": "assets/stage3_scene5",
+      "text": "Their evacuation route is mapped in the system, but something has altered the station layout. Corridors end abruptly, airlocks open to empty space. The station itself is being reshaped.",
+      "choices": {
+        "A": "stage3_scene11",
+        "B": "stage3_scene12",
+        "A_text": "Force your way to an escape pod",
+        "B_text": "Confront what's changing the station"
+      },
+      "emotion": "scared",
+      "pose": "chibi_scared"
+    },
+    "stage3_scene6": {
+      "folder": "assets/stage3_scene6",
+      "text": "I activate their equipment. Dimensional readings spike off the charts. A fragmented transmission comes through: 'Dr. Chen... became the anchor... her consciousness... split between realities... entity using her as bridge.'",
+      "choices": {
+        "A": "stage3_scene13",
+        "B": "stage3_scene14",
+        "A_text": "Ask how to free her",
+        "B_text": "Ask how to close the gateway"
+      },
+      "emotion": "questioning",
+      "pose": "chibi_thinking"
+    },
+    "stage3_scene7": {
+      "folder": "assets/stage3_scene7",
+      "text": "'I'll help you.' Dr. Chen appears partially, her form distorted and shifting. 'Reset the quantum field generators. Reverse the polarity sequence. But hurry—entities are coming through.'",
+      "choices": {
+        "A": "stage3_scene15",
+        "B": "stage3_scene16",
+        "A_text": "Begin the sequence quickly",
+        "B_text": "Ask what's coming through"
+      },
+      "emotion": "excited",
+      "pose": "chibi_standing"
+    },
+    "stage3_scene8": {
+      "folder": "assets/stage3_scene8",
+      "text": "The gateway control room contains everything needed to end this cosmic horror. As I prepare the field reversal, shadow-like entities begin materializing at the edges of my vision. Time is running out.",
+      "choices": {
+        "A": "epilogue_good",
+        "B": "epilogue_bad",
+        "A_text": "Complete the reversal sequence",
+        "B_text": "Run for the escape pods"
+      },
+      "emotion": "scared",
+      "pose": "chibi_scared"
+    },
+    "epilogue_good": {
+      "folder": "assets/epilogue_good",
+      "text": "The sequence works. The gateway collapses, Dr. Chen's fractured consciousness reunites before fading to peace. The station stabilizes as reality reasserts itself. As my ship disengages, I transmit the warning: this void must never be breached again.",
+      "choices": {
+        "A": "scene1",
+        "B": "scene1",
+        "A_text": "Play Again",
+        "B_text": "Return to Title"
+      },
+      "emotion": "smile",
+      "pose": "chibi_standing"
+    },
+    "epilogue_bad": {
+      "folder": "assets/epilogue_bad",
+      "text": "I flee before completing the sequence. The gateway expands, void entities pouring through. I barely escape in my ship, but the dimensional breach is widening. I've doomed our reality to the cosmic horror that consumed the Nova Horizon station.",
+      "choices": {
+        "A": "scene1",
+        "B": "scene1",
+        "A_text": "Try Again",
+        "B_text": "Return to Title"
+      },
+      "emotion": "scared",
+      "pose": "chibi_scared"
+    }
+  }
