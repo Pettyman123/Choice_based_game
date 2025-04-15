@@ -2,7 +2,19 @@ import pygame
 import os
 import json
 import sys
+import math
 
+
+import json
+
+def load_stage(stage_name):
+    path = f"stages/{stage_name}.json"
+    try:
+        with open(path, "r") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print(f"❌ Stage file not found: {path}")
+        return {}
 
 
 
@@ -24,6 +36,61 @@ def play_voice(scene_name):
     else:
         print(f"Voice file not found: {voice_path}")
 
+SAVE_PATH = "data/save.json"
+
+def save_game(stage, scene, image_index, memory):
+    data = {
+        "stage": stage,
+        "scene": scene,
+        "image_index": image_index,
+        "memory": memory
+    }
+    with open(SAVE_PATH, "w") as f:
+        json.dump(data, f)
+    print("💾 Game saved.")
+
+def load_game():
+    try:
+        with open(SAVE_PATH, "r") as f:
+            data = json.load(f)
+            print("📂 Game loaded.")
+            return data
+    except FileNotFoundError:
+        print("❌ No save file found.")
+        return None
+
+
+
+# def draw_wavy_text(surface, text, x, y, font, color, time_offset=0, amplitude=5, frequency=0.3):
+#     for i, char in enumerate(text):
+#         offset_y = math.sin(time_offset + i * frequency) * amplitude
+#         char_surf = font.render(char, True, color)
+#         surface.blit(char_surf, (x + i * char_surf.get_width(), y + offset_y))
+
+
+# def draw_glow_text(surface, text, x, y, font, main_color, glow_color, intensity=5):
+#     for dx in range(-intensity, intensity + 1):
+#         for dy in range(-intensity, intensity + 1):
+#             if dx**2 + dy**2 <= intensity**2:
+#                 glow_surface = font.render(text, True, glow_color)
+#                 surface.blit(glow_surface, (x + dx, y + dy))
+#     text_surface = font.render(text, True, main_color)
+#     surface.blit(text_surface, (x, y))
+
+# def draw_glowy_wavy_text(surface, text, x, y, font, main_color, glow_color, time_offset=0):
+#     for i, char in enumerate(text):
+#         offset_y = math.sin(time_offset + i * 0.3) * 5
+
+#         # glow
+#         for dx in range(-2, 3):
+#             for dy in range(-2, 3):
+#                 if dx != 0 or dy != 0:
+#                     glow_surf = font.render(char, True, glow_color)
+#                     surface.blit(glow_surf, (x + i * 22 + dx, y + offset_y + dy))
+
+#         # main text
+#         char_surf = font.render(char, True, main_color)
+#         surface.blit(char_surf, (x + i * 22, y + offset_y))
 
 
 # Initialize Pygame
@@ -33,10 +100,9 @@ player_memory = {}
 ambient_sound = pygame.mixer.Sound("assets/audio/dripping.mp3")
 ambient_channel = pygame.mixer.Channel(1)
 ambient_channel.play(ambient_sound, loops=-1)
-ambient_channel.set_volume(0.2)
-
+ambient_channel.set_volume(0.5)
 typing_sound = pygame.mixer.Sound("assets/audio/typing.mp3")
-typing_sound.set_volume(0.5)  # optional: reduce volume
+typing_sound.set_volume(0.05)  # optional: reduce volume
 play_background_music()
 
 # Global Constants
@@ -47,17 +113,22 @@ FPS = 60
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
+FONT_PATH = "assets/fonts/KnightWarrior-w16n8.otf"
+FONT_SIZE = 24
+font = pygame.font.Font(FONT_PATH, FONT_SIZE)
+
 # Setup Window
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Eerie Choice Game")
 
 # Font Setup
-font = pygame.font.SysFont("Arial", 32)
-
+# font = pygame.font.SysFont("Arial", 32)
 # Load story.json
-with open('data/story.json', 'r') as f:
-    STORY = json.load(f)
+# with open('data/story.json', 'r') as f:
+#     STORY = json.load(f)
 
+current_stage = "stage1"  # default starting point
+STORY = load_stage(current_stage)
 # Scene Manager
 current_scene = "scene1"
 
@@ -151,7 +222,7 @@ show_new_image = True
 SLIDE_DURATION = 3000  # time per image in ms (3 seconds)
 last_slide_time = pygame.time.get_ticks()
 last_typing_sound_time = 0
-sound_delay = 50  # milliseconds
+sound_delay = 10  # milliseconds
 
 # Game Loop
 while running:
@@ -202,19 +273,47 @@ while running:
                     typing_sound.play()
 
 
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_r:
-                    print("🔁 Replaying current scene")
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_r:
+                print("🔁 Replaying current scene")
+
+                # Reset image index and reload current scene images
+                scene_images = load_scene_images(current_scene)
+                image_index = 0
+
+                # Reset typing effect
+                full_text = STORY[current_scene]['text']
+                visible_text = ""
+                char_index = 0
+                last_char_time = pygame.time.get_ticks()
+
+                # Play voice again
+                play_voice(current_scene)
+
+                # Reset image fade trigger and slide timer
+                show_new_image = True
+                last_slide_time = pygame.time.get_ticks()
+
+            if event.key == pygame.K_i:
+                save_game(current_stage, current_scene, image_index, player_memory)
+            elif event.key == pygame.K_o:
+                save_data = load_game()
+                if save_data:
+                    current_stage = save_data["stage"]
+                    STORY = load_stage(current_stage)
+                    current_scene = save_data["scene"]
                     scene_images = load_scene_images(current_scene)
-                    image_index = 0
+                    image_index = save_data["image_index"]
+                    player_memory = save_data["memory"]
                     show_new_image = True
                     play_voice(current_scene)
 
-                    # Reset typing
-                    full_text = STORY[current_scene]['text']
+                    # Reset typing effect
+                    full_text = STORY[current_scene]["text"]
                     visible_text = ""
                     char_index = 0
                     last_char_time = pygame.time.get_ticks()
+
 
 
 
