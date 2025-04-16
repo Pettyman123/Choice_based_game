@@ -69,7 +69,7 @@
       "B_text": "Increase scanner resolution"
     },
     "emotion": "watching",
-    "pose": "chibi_scared"
+    "pose": "chibi_scared_run"
   },
   "scene7": {
     "folder": "assets/scene7",
@@ -80,7 +80,7 @@
       "A_text": "Override the airlock",
       "B_text": "Look for authentication codes first"
     },
-    "emotion": "smirk",
+    "emotion": "smirk", 
     "pose": "chibi_thinking"
   },
   "scene8": {
@@ -93,6 +93,91 @@
       "B_text": "Try to understand the visions"
     },
     "emotion": "scared",
-    "pose": "chibi_scared"
-  }
+    "pose": "chibi_scared_run"
+  },
+  
+  "scene9": {
+  "folder": "assets/scene9",
+  "text": "I retreat from the crystal, heart racing. I can't shake the feeling that something has noticed me...",
+  "choices": {
+    "A": "scene8",
+    "B": "scene1",
+    "A_text": "Return to crystal",
+    "B_text": "Head to docking bay"
+  },
+  "emotion": "scared",
+  "pose": "chibi_scared_run"
+},
+"scene10": {
+  "folder": "assets/scene10",
+  "text": "I float carefully along the cleared path. Every corner feels like it’s hiding something unseen.",
+  "choices": {
+    "A": "scene11",
+    "B": "scene8",
+    "A_text": "Continue forward",
+    "B_text": "Retreat to main hub"
+  },
+  "emotion": "questioning",
+  "pose": "chibi_standing"
+},
+"scene11": {
+  "folder": "assets/scene11",
+  "text": "The command center is locked. Monitors flash with encrypted logs. Something is trying to reboot the system.",
+  "choices": {
+    "A": "scene10",
+    "B": "scene8",
+    "A_text": "Override the system",
+    "B_text": "Abort and leave"
+  },
+  "emotion": "reading",
+  "pose": "chibi_reading"
+},
+"scene12": {
+  "folder": "assets/scene12",
+  "text": "Powering down the systems... darkness. A presence brushes against the outside of my ship.",
+  "choices": {
+    "A": "scene8",
+    "B": "scene13",
+    "A_text": "Power back up",
+    "B_text": "Send a distress ping"
+  },
+  "emotion": "scared",
+  "pose": "chibi_thinking"
+},
+"scene13": {
+  "folder": "assets/scene13",
+  "text": "Increasing scanner resolution reveals... too much. The figure stares back, not at the ship, but at me.",
+  "choices": {
+    "A": "scene8",
+    "B": "scene12",
+    "A_text": "Shut it down",
+    "B_text": "Keep scanning"
+  },
+  "emotion": "watching",
+  "pose": "chibi_scared_run"
+},
+"scene14": {
+  "folder": "assets/scene14",
+  "text": "The override works. The airlock opens with a hiss, revealing darkness and silence beyond.",
+  "choices": {
+    "A": "scene8",
+    "B": "scene5",
+    "A_text": "Step inside",
+    "B_text": "Return to main hub"
+  },
+  "emotion": "thinking",
+  "pose": "chibi_standing"
+},
+"scene15": {
+  "folder": "assets/scene15",
+  "text": "I search the terminal for authentication codes. Logs suggest Dr. Chen accessed this area last...",
+  "choices": {
+    "A": "scene14",
+    "B": "scene8",
+    "A_text": "Spoof her ID",
+    "B_text": "Try alternate door"
+  },
+  "emotion": "reading",
+  "pose": "chibi_thinking"
+}
 }
