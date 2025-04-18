@@ -4,8 +4,6 @@ import json
 import sys
 import math
 
-
-
 def load_stage(stage_name):
     path = f"stages/{stage_name}.json"
     try:
@@ -15,7 +13,6 @@ def load_stage(stage_name):
         print(f"❌ Stage file not found: {path}")
         return {}
 
-
 def play_background_music():
     music_path = "assets/audio/bg_music.mp3"
     if os.path.exists(music_path):
@@ -24,15 +21,30 @@ def play_background_music():
     else:
         print("Background music file not found.")
 
+# Keep track of the current voice sound
+current_voice_sound = None
 
 def play_voice(scene_name):
+    global current_voice_sound
+    
+    # Stop any currently playing voice
+    if current_voice_sound:
+        current_voice_sound.stop()
+    
     voice_path = f"assets/voice/{scene_name}.mp3"
     print(f"Trying to play: {voice_path}")
     if os.path.exists(voice_path):
-        voice = pygame.mixer.Sound(voice_path)
-        voice.play()
+        current_voice_sound = pygame.mixer.Sound(voice_path)
+        current_voice_sound.play()
     else:
         print(f"Voice file not found: {voice_path}")
+        current_voice_sound = None
+
+def stop_voice():
+    global current_voice_sound
+    if current_voice_sound:
+        current_voice_sound.stop()
+        current_voice_sound = None
 
 SAVE_PATH = "data/save.json"
 
@@ -81,6 +93,9 @@ FPS = 60
 # Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+GRAY = (100, 100, 100)
+DARK_GRAY = (50, 50, 50)
+RED = (255, 100, 100)
 
 FONT_PATH = "assets/fonts/KnightWarrior-w16n8.otf"
 FONT_SIZE = 24
@@ -92,6 +107,10 @@ pygame.display.set_caption("Eerie Choice Game")
 
 current_stage = "stage1"  # default starting point
 STORY = load_stage(current_stage)
+STORY = {}
+STORY.update(load_stage("stage1"))
+STORY.update(load_stage("stage2"))
+STORY.update(load_stage("stage3"))
 # Scene Manager
 current_scene = "scene1"
 
@@ -222,6 +241,17 @@ def display_character(surface, scene_data):
         if chibi_img:
             surface.blit(chibi_img, CHARACTER_POSITION)
 
+# Function to skip to the end of the current scene
+def skip_to_end():
+    global image_index, visible_text, char_index
+    # Skip to the last image in the scene
+    image_index = len(scene_images) - 1
+    # Show all text immediately
+    visible_text = full_text
+    char_index = len(full_text)
+    # Stop current voice
+    stop_voice()
+
 # Initialize first scene images
 scene_images = load_scene_images(current_scene)
 full_text = STORY[current_scene]['text']
@@ -241,6 +271,9 @@ last_slide_time = pygame.time.get_ticks()
 last_typing_sound_time = 0
 sound_delay = 10  # milliseconds
 
+# Skip button dimensions and position
+skip_button_rect = pygame.Rect(SCREEN_WIDTH - 120, 10, 100, 30)
+
 # Game Loop
 while running:
     screen.fill(BLACK)
@@ -252,14 +285,24 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # Only allow clicking on buttons
             mx, my = pygame.mouse.get_pos()
-            if image_index == len(scene_images) - 1:
+            
+            # Skip button handling
+            if skip_button_rect.collidepoint(mx, my):
+                skip_to_end()
+                
+            # Choice buttons handling
+            elif image_index == len(scene_images) - 1:
                 if choice_a_rect.collidepoint(mx, my):
                     fade_out(600)  # fade to black before switching
                     current_scene = STORY[current_scene]['choices']['A']
                     scene_images = load_scene_images(current_scene)
                     image_index = 0
                     show_new_image = True
+                    
+                    # Stop previous voice before playing new one
+                    stop_voice()
                     play_voice(current_scene)
+                    
                     last_slide_time = pygame.time.get_ticks()
                     # Store player's choice
                     player_memory[current_scene] = "A"  # or "B"
@@ -277,7 +320,11 @@ while running:
                     scene_images = load_scene_images(current_scene)
                     image_index = 0
                     show_new_image = True
+                    
+                    # Stop previous voice before playing new one
+                    stop_voice()
                     play_voice(current_scene)
+                    
                     last_slide_time = pygame.time.get_ticks()
                     # Store player's choice
                     player_memory[current_scene] = "B"  # Fixed - was "A"
@@ -292,6 +339,9 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
                 print("🔁 Replaying current scene")
+                
+                # Stop current voice
+                stop_voice()
 
                 # Reset image index and reload current scene images
                 scene_images = load_scene_images(current_scene)
@@ -315,6 +365,9 @@ while running:
             elif event.key == pygame.K_o:
                 save_data = load_game()
                 if save_data:
+                    # Stop current voice
+                    stop_voice()
+                    
                     current_stage = save_data["stage"]
                     STORY = load_stage(current_stage)
                     current_scene = save_data["scene"]
@@ -329,6 +382,10 @@ while running:
                     visible_text = ""
                     char_index = 0
                     last_char_time = pygame.time.get_ticks()
+            
+            # Add spacebar as skip shortcut
+            elif event.key == pygame.K_SPACE:
+                skip_to_end()
 
     # Show current scene image
     if show_new_image:
@@ -377,6 +434,18 @@ while running:
 
         draw_text(screen, choice_a_text, choice_a_rect.x + 10, choice_a_rect.y + 10, 480, font)
         draw_text(screen, choice_b_text, choice_b_rect.x + 10, choice_b_rect.y + 10, 480, font)
+
+    # Draw skip button (only when not at the last image)
+    if image_index < len(scene_images) - 1:
+        # Change color when mouse hovers over button
+        mx, my = pygame.mouse.get_pos()
+        button_color = RED if skip_button_rect.collidepoint(mx, my) else DARK_GRAY
+        
+        pygame.draw.rect(screen, button_color, skip_button_rect, border_radius=5)
+        pygame.draw.rect(screen, GRAY, skip_button_rect, 2, border_radius=5)  # Border
+        skip_text = font.render("SKIP", True, WHITE)
+        text_rect = skip_text.get_rect(center=skip_button_rect.center)
+        screen.blit(skip_text, text_rect)
 
     # Automatically go to next image after duration
     if image_index < len(scene_images) - 1:

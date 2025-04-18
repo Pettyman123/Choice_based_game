@@ -94,5 +94,104 @@
       },
       "emotion": "watching",
       "pose": "chibi_scared"
-    }
-  }
+    },
+  
+      "stage2_scene9": {
+        "folder": "assets/stage2_scene9",
+        "text": "These readings make no sense... the fabric of spacetime itself is thinning here. Whatever the scientists opened, it's still active, still growing. The energy signatures are unlike anything in known physics.",
+        "choices": {
+          "A": "stage2_scene13",
+          "B": "stage2_scene15",
+          "A_text": "Record the anomalous data",
+          "B_text": "Follow the distortion to its source"
+        },
+        "emotion": "questioning",
+        "pose": "chibi_thinking"
+      },
+      "stage2_scene10": {
+        "folder": "assets/stage2_scene10",
+        "text": "I hold my breath and listen... there's something communicating through the station's structure. Vibrations, patterns, voices just below the threshold of hearing. It's almost like the station itself is alive now.",
+        "choices": {
+          "A": "stage2_scene11",
+          "B": "stage2_scene7",
+          "A_text": "Follow the whispers",
+          "B_text": "Research what might cause this"
+        },
+        "emotion": "scared",
+        "pose": "chibi_standing"
+      },
+      "stage2_scene11": {
+        "folder": "assets/stage2_scene11",
+        "text": "The whispers grow stronger as I follow them deeper. They're pulling me somewhere... guiding me. Some sound almost familiar, like the voices of the station's crew, but distorted, changed.",
+        "choices": {
+          "A": "stage2_scene15",
+          "B": "stage2_scene16",
+          "A_text": "Continue following the whispers",
+          "B_text": "Look for crew quarters"
+        },
+        "emotion": "scared",
+        "pose": "chibi_scared"
+      },
+      "stage2_scene12": {
+        "folder": "assets/stage2_scene12",
+        "text": "These side labs tell a story of escalation. They started with basic dimensional physics, then moved to biological testing, then... communion with whatever they found. They were trying to become something new.",
+        "choices": {
+          "A": "stage2_scene6",
+          "B": "stage2_scene8",
+          "A_text": "Follow the logs to the main lab",
+          "B_text": "Check crew biosignatures"
+        },
+        "emotion": "questioning",
+        "pose": "chibi_standing"
+      },
+      "stage2_scene13": {
+        "folder": "assets/stage2_scene13",
+        "text": "Downloading the research data... but the security system is responding! And these formulas—they're changing as I watch, evolving like they have some kind of intelligence. Something doesn't want this information leaving the station.",
+        "choices": {
+          "A": "stage2_scene15",
+          "B": "stage3_scene1",
+          "A_text": "Abort and find the portal",
+          "B_text": "Look for Dr. Chen's quarters"
+        },
+        "emotion": "scared",
+        "pose": "chibi_scared_run"
+      },
+      "stage2_scene14": {
+        "folder": "assets/stage2_scene14",
+        "text": "This equipment... it's a dimensional resonance amplifier. They built it to communicate with whatever exists on the other side. These machines weren't just for research—they were building a bridge, a permanent connection between worlds.",
+        "choices": {
+          "A": "stage2_scene15",
+          "B": "stage2_scene8",
+          "A_text": "Try to find the portal",
+          "B_text": "Check for crew mutations"
+        },
+        "emotion": "watching",
+        "pose": "chibi_thinking"
+      },
+      "stage2_scene15": {
+        "folder": "assets/stage2_scene15",
+        "text": "There it is—the portal to whatever void dimension they discovered. It's unstable, growing. The containment systems are failing. I can feel it pulling at me, like it's aware of my presence here.",
+        "choices": {
+          "A": "stage3_scene4",
+          "B": "stage3_scene5",
+          "A_text": "Examine the portal closely",
+          "B_text": "Look for an evacuation route"
+        },
+        "emotion": "scared",
+        "pose": "chibi_scared"
+      },
+      "stage2_scene16": {
+        "folder": "assets/stage2_scene16",
+        "text": "Some tried to escape. Others... transformed. The logs show they were changing, merging with something from the other side. Those who resisted were... I can't even describe what I'm seeing in these final security images.",
+        "choices": {
+          "A": "stage3_scene1",
+          "B": "stage3_scene2",
+          "A_text": "Find Dr. Chen's quarters",
+          "B_text": "Look for quarantine protocols"
+        },
+        "emotion": "scared",
+        "pose": "chibi_scared_run"
+      }
+}
+
+  

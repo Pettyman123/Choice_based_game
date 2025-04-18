@@ -57,3 +57,8 @@ def play_voice(scene_name):
         voice.play()
     else:
         print(f"Voice file not found: {voice_path}")
+
+import numpy as np
+x = np.array([1,2,3])
+x *= x
+print(x)
