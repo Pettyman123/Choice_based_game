@@ -23,9 +23,11 @@ def play_background_music():
 
 # Keep track of the current voice sound
 current_voice_sound = None
+voice_completed = False  # Track if voice has finished playing
 
 def play_voice(scene_name):
-    global current_voice_sound
+    global current_voice_sound, voice_completed
+    voice_completed = False  # Reset voice completion status
     
     # Stop any currently playing voice
     if current_voice_sound:
@@ -39,12 +41,14 @@ def play_voice(scene_name):
     else:
         print(f"Voice file not found: {voice_path}")
         current_voice_sound = None
+        voice_completed = True  # Mark as completed if no voice file
 
 def stop_voice():
-    global current_voice_sound
+    global current_voice_sound, voice_completed
     if current_voice_sound:
         current_voice_sound.stop()
         current_voice_sound = None
+    voice_completed = True  # Mark as completed when stopped
 
 SAVE_PATH = "data/save.json"
 
@@ -81,9 +85,9 @@ player_memory = {}
 ambient_sound = pygame.mixer.Sound("assets/audio/dripping.mp3")
 ambient_channel = pygame.mixer.Channel(1)
 ambient_channel.play(ambient_sound, loops=-1)
-ambient_channel.set_volume(0.5)
+ambient_channel.set_volume(0.35)
 typing_sound = pygame.mixer.Sound("assets/audio/typing.mp3")
-typing_sound.set_volume(0.05)  # optional: reduce volume
+typing_sound.set_volume(0)  # optional: reduce volume
 play_background_music()
 
 # Global Constants
@@ -142,7 +146,7 @@ def draw_text(surface, text, x, y, width, font, color=WHITE):
         surface.blit(font.render(line, True, color), (x_offset, y_offset))
 
 
-def fade_in(surface, image, duration=500):
+def fade_in(surface, image, duration=1500):
     fade = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT)).convert()
     fade.fill((0, 0, 0))
 
@@ -153,7 +157,7 @@ def fade_in(surface, image, duration=500):
         pygame.display.update()
         pygame.time.delay(duration // 17)
 
-def fade_out(duration=500):
+def fade_out(duration=1500):
     fade = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT)).convert()
     fade.fill((0, 0, 0))
     for alpha in range(0, 255, 15):
@@ -243,14 +247,15 @@ def display_character(surface, scene_data):
 
 # Function to skip to the end of the current scene
 def skip_to_end():
-    global image_index, visible_text, char_index
+    global image_index, visible_text, char_index, voice_completed
     # Skip to the last image in the scene
     image_index = len(scene_images) - 1
     # Show all text immediately
     visible_text = full_text
     char_index = len(full_text)
-    # Stop current voice
+    # Stop current voice and mark as completed
     stop_voice()
+    voice_completed = True
 
 # Initialize first scene images
 scene_images = load_scene_images(current_scene)
@@ -272,7 +277,7 @@ last_typing_sound_time = 0
 sound_delay = 10  # milliseconds
 
 # Skip button dimensions and position
-skip_button_rect = pygame.Rect(SCREEN_WIDTH - 120, 10, 100, 30)
+skip_button_rect = pygame.Rect(SCREEN_WIDTH - 120, SCREEN_HEIGHT - 180, 100, 30)
 
 # Game Loop
 while running:
@@ -292,49 +297,108 @@ while running:
                 
             # Choice buttons handling
             elif image_index == len(scene_images) - 1:
-                if choice_a_rect.collidepoint(mx, my):
-                    fade_out(600)  # fade to black before switching
-                    current_scene = STORY[current_scene]['choices']['A']
-                    scene_images = load_scene_images(current_scene)
-                    image_index = 0
-                    show_new_image = True
+                # Check if we're in an ending scene (epilogue)
+                is_ending = current_scene.startswith('epilogue')
+                
+                if is_ending:
+                    # For ending scenes, show three buttons
+                    choice_a_rect = pygame.Rect(100, SCREEN_HEIGHT - 120, 400, 60)
+                    choice_b_rect = pygame.Rect(540, SCREEN_HEIGHT - 120, 400, 60)
+                    exit_rect = pygame.Rect(980, SCREEN_HEIGHT - 120, 200, 60)
                     
-                    # Stop previous voice before playing new one
-                    stop_voice()
-                    play_voice(current_scene)
-                    
-                    last_slide_time = pygame.time.get_ticks()
-                    # Store player's choice
-                    player_memory[current_scene] = "A"  # or "B"
+                    # Handle exit button click
+                    if exit_rect.collidepoint(mx, my):
+                        running = False
+                    elif choice_a_rect.collidepoint(mx, my):
+                        fade_out(600)  # fade to black before switching
+                        current_scene = STORY[current_scene]['choices']['A']
+                        scene_images = load_scene_images(current_scene)
+                        image_index = 0
+                        show_new_image = True
+                        
+                        # Stop previous voice before playing new one
+                        stop_voice()
+                        play_voice(current_scene)
+                        
+                        last_slide_time = pygame.time.get_ticks()
+                        # Store player's choice
+                        player_memory[current_scene] = "A"
 
-                    # 🔁 Reset typing text
-                    full_text = STORY[current_scene]['text']
-                    visible_text = ""
-                    char_index = 0
-                    last_char_time = pygame.time.get_ticks()
-                    typing_sound.play()
+                        # 🔁 Reset typing text
+                        full_text = STORY[current_scene]['text']
+                        visible_text = ""
+                        char_index = 0
+                        last_char_time = pygame.time.get_ticks()
+                        typing_sound.play()
+                    elif choice_b_rect.collidepoint(mx, my):
+                        fade_out(600)  # fade to black before switching
+                        current_scene = STORY[current_scene]['choices']['B']
+                        scene_images = load_scene_images(current_scene)
+                        image_index = 0
+                        show_new_image = True
+                        
+                        # Stop previous voice before playing new one
+                        stop_voice()
+                        play_voice(current_scene)
+                        
+                        last_slide_time = pygame.time.get_ticks()
+                        # Store player's choice
+                        player_memory[current_scene] = "B"
+                        
+                        # 🔁 Reset typing text
+                        full_text = STORY[current_scene]['text']
+                        visible_text = ""
+                        char_index = 0
+                        last_char_time = pygame.time.get_ticks()
+                        typing_sound.play()
+                else:
+                    # For normal scenes, show two buttons
+                    choice_a_rect = pygame.Rect(100, SCREEN_HEIGHT - 120, 500, 60)
+                    choice_b_rect = pygame.Rect(680, SCREEN_HEIGHT - 120, 500, 60)
+                    
+                    if choice_a_rect.collidepoint(mx, my):
+                        fade_out(600)  # fade to black before switching
+                        current_scene = STORY[current_scene]['choices']['A']
+                        scene_images = load_scene_images(current_scene)
+                        image_index = 0
+                        show_new_image = True
+                        
+                        # Stop previous voice before playing new one
+                        stop_voice()
+                        play_voice(current_scene)
+                        
+                        last_slide_time = pygame.time.get_ticks()
+                        # Store player's choice
+                        player_memory[current_scene] = "A"
 
-                elif choice_b_rect.collidepoint(mx, my):
-                    fade_out(600)  # fade to black before switching
-                    current_scene = STORY[current_scene]['choices']['B']
-                    scene_images = load_scene_images(current_scene)
-                    image_index = 0
-                    show_new_image = True
-                    
-                    # Stop previous voice before playing new one
-                    stop_voice()
-                    play_voice(current_scene)
-                    
-                    last_slide_time = pygame.time.get_ticks()
-                    # Store player's choice
-                    player_memory[current_scene] = "B"  # Fixed - was "A"
-                    
-                    # 🔁 Reset typing text
-                    full_text = STORY[current_scene]['text']
-                    visible_text = ""
-                    char_index = 0
-                    last_char_time = pygame.time.get_ticks()
-                    typing_sound.play()
+                        # 🔁 Reset typing text
+                        full_text = STORY[current_scene]['text']
+                        visible_text = ""
+                        char_index = 0
+                        last_char_time = pygame.time.get_ticks()
+                        typing_sound.play()
+
+                    elif choice_b_rect.collidepoint(mx, my):
+                        fade_out(600)  # fade to black before switching
+                        current_scene = STORY[current_scene]['choices']['B']
+                        scene_images = load_scene_images(current_scene)
+                        image_index = 0
+                        show_new_image = True
+                        
+                        # Stop previous voice before playing new one
+                        stop_voice()
+                        play_voice(current_scene)
+                        
+                        last_slide_time = pygame.time.get_ticks()
+                        # Store player's choice
+                        player_memory[current_scene] = "B"
+                        
+                        # 🔁 Reset typing text
+                        full_text = STORY[current_scene]['text']
+                        visible_text = ""
+                        char_index = 0
+                        last_char_time = pygame.time.get_ticks()
+                        typing_sound.play()
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
@@ -393,7 +457,9 @@ while running:
         show_new_image = False
     else:
         screen.blit(pygame.transform.scale(scene_images[image_index], (SCREEN_WIDTH, SCREEN_HEIGHT)), (0, 0))
-        apply_filter(screen, color=(20, 20, 20), alpha=100)  # dark fog
+        # Only apply blur if voice has completed
+        if voice_completed:
+            apply_filter(screen, color=(20, 20, 20), alpha=100)  # dark fog
 
     # Display character overlay with standardized sizing
     if current_scene in STORY:
@@ -426,8 +492,22 @@ while running:
         choice_a_text = "A: " + STORY[current_scene]['choices']['A_text']
         choice_b_text = "B: " + STORY[current_scene]['choices']['B_text']
 
-        choice_a_rect = pygame.Rect(100, SCREEN_HEIGHT - 120, 500, 60)
-        choice_b_rect = pygame.Rect(680, SCREEN_HEIGHT - 120, 500, 60)
+        # Check if we're in an ending scene (epilogue)
+        is_ending = current_scene.startswith('epilogue')
+        
+        if is_ending:
+            # For ending scenes, show three buttons
+            choice_a_rect = pygame.Rect(100, SCREEN_HEIGHT - 120, 400, 60)
+            choice_b_rect = pygame.Rect(540, SCREEN_HEIGHT - 120, 400, 60)
+            exit_rect = pygame.Rect(980, SCREEN_HEIGHT - 120, 200, 60)
+            
+            # Draw exit button
+            pygame.draw.rect(screen, (50, 50, 50), exit_rect)
+            draw_text(screen, "Exit Game", exit_rect.x + 10, exit_rect.y + 10, 180, font)
+        else:
+            # For normal scenes, show two buttons
+            choice_a_rect = pygame.Rect(100, SCREEN_HEIGHT - 120, 500, 60)
+            choice_b_rect = pygame.Rect(680, SCREEN_HEIGHT - 120, 500, 60)
 
         pygame.draw.rect(screen, (50, 50, 50), choice_a_rect)
         pygame.draw.rect(screen, (50, 50, 50), choice_b_rect)
@@ -435,17 +515,15 @@ while running:
         draw_text(screen, choice_a_text, choice_a_rect.x + 10, choice_a_rect.y + 10, 480, font)
         draw_text(screen, choice_b_text, choice_b_rect.x + 10, choice_b_rect.y + 10, 480, font)
 
-    # Draw skip button (only when not at the last image)
-    if image_index < len(scene_images) - 1:
-        # Change color when mouse hovers over button
-        mx, my = pygame.mouse.get_pos()
-        button_color = RED if skip_button_rect.collidepoint(mx, my) else DARK_GRAY
-        
-        pygame.draw.rect(screen, button_color, skip_button_rect, border_radius=5)
-        pygame.draw.rect(screen, GRAY, skip_button_rect, 2, border_radius=5)  # Border
-        skip_text = font.render("SKIP", True, WHITE)
-        text_rect = skip_text.get_rect(center=skip_button_rect.center)
-        screen.blit(skip_text, text_rect)
+    # Draw skip button
+    mx, my = pygame.mouse.get_pos()
+    button_color = RED if skip_button_rect.collidepoint(mx, my) else DARK_GRAY
+    
+    pygame.draw.rect(screen, button_color, skip_button_rect, border_radius=5)
+    pygame.draw.rect(screen, GRAY, skip_button_rect, 2, border_radius=5)  # Border
+    skip_text = font.render("SKIP", True, WHITE)
+    text_rect = skip_text.get_rect(center=skip_button_rect.center)
+    screen.blit(skip_text, text_rect)
 
     # Automatically go to next image after duration
     if image_index < len(scene_images) - 1:
